@@ -1,47 +1,15 @@
-public class Enemy {
-    private String name;
-    private String type;
-    private int currentHP;
-    private int maxHP;
-    private int maxMP;
-    private int currentMP;
-    private int skill2Cooldown;
-    private int skill3Cooldown;
+public class Enemy extends Character {
     
     public Enemy(String name, String type, int hp, int mp) {
-        this.name = name;
-        this.type = type;
-        this.maxHP = hp;
-        this.currentHP = hp;
-        this.maxMP = mp;
-        this.currentMP = mp;
-        this.skill2Cooldown = 0;
-        this.skill3Cooldown = 0;
+        super(name, type, hp, mp);
     }
     
-    public String getName() { return name; }
-    public String getType() { return type; }
-    public int getCurrentHP() { return currentHP; }
-    public int getMaxHP() { return maxHP; }
-    public int getCurrentMP() { return currentMP; }
-    public int getMaxMP() { return maxMP; }
-    
-    public boolean isAlive() {
-        return currentHP > 0;
+    public void resetToMaxHealth() {
+        this.currentHP = this.maxHP;
+        this.currentMP = this.maxMP;
     }
     
-    public void takeDamage(int damage) {
-        currentHP = currentHP - damage;
-        if (currentHP < 0) {
-            currentHP = 0;
-        }
-    }
-    
-    public void reduceCooldowns() {
-        if (skill2Cooldown > 0) skill2Cooldown--;
-        if (skill3Cooldown > 0) skill3Cooldown--;
-    }
-    
+    @Override
     public int attack() {
         reduceCooldowns();
         
@@ -61,6 +29,7 @@ public class Enemy {
         return getSkillDamage(skillChoice);
     }
     
+    @Override
     public String getSkillName(int skillNum) {
         if (type.equals("Aries")) {
             if (skillNum == 1) return "Raging Charge";
@@ -82,6 +51,7 @@ public class Enemy {
         return "Attack";
     }
     
+    @Override
     public int getSkillDamage(int skillNum) {
         if (type.equals("Aries")) {
             if (skillNum == 1) return 90;
@@ -109,6 +79,7 @@ public class Enemy {
         return 50;
     }
     
+    @Override
     public String getAttackMessage() {
         if (type.equals("Aries")) {
             return name + " charges with blazing fury!";

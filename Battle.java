@@ -5,16 +5,24 @@ public class Battle {
     private Enemy enemy;
     private Scanner scanner;
     private Shop shop;
+    private InputHandler inputHandler;
     private boolean isInitialZeusBattle;
     private int roundNumber;
+    private String minionCounter;
     
-    public Battle(Player player, Enemy enemy, Scanner scanner, Shop shop, boolean isInitialZeus) {
+    public Battle(Player player, Enemy enemy, Scanner scanner, Shop shop, InputHandler inputHandler, boolean isInitialZeus) {
+        this(player, enemy, scanner, shop, inputHandler, isInitialZeus, "");
+    }
+    
+    public Battle(Player player, Enemy enemy, Scanner scanner, Shop shop, InputHandler inputHandler, boolean isInitialZeus, String minionCounter) {
         this.player = player;
         this.enemy = enemy;
         this.scanner = scanner;
         this.shop = shop;
+        this.inputHandler = inputHandler;
         this.isInitialZeusBattle = isInitialZeus;
         this.roundNumber = 1;
+        this.minionCounter = minionCounter;
     }
     
     public boolean startBattle() {
@@ -23,6 +31,9 @@ public class Battle {
         }
         
         System.out.println("\n=== BATTLE START ===");
+        if (!minionCounter.isEmpty()) {
+            System.out.println(minionCounter);
+        }
         System.out.println("You face " + enemy.getName() + "!");
         System.out.println();
         
@@ -38,8 +49,9 @@ public class Battle {
             enemyTurn();
             roundNumber++;
             player.reduceCooldowns();
+            System.out.println("\n" + "=".repeat(60));
             System.out.println("\nPress Enter to continue...");
-            scanner.nextLine();
+            inputHandler.waitForEnter();
         }
         
         if (!player.isAlive()) {
@@ -52,6 +64,7 @@ public class Battle {
     
     public boolean initialZeusBattle() {
         while (player.isAlive() && roundNumber <= 4) {
+            System.out.println("\n" + "=".repeat(60));
             System.out.println("\n=== Round " + roundNumber + " ===");
             System.out.println(player.getName() + ": " + player.getCurrentHP() + "/" + player.getMaxHP() + " HP");
             System.out.println("Zeus: Overwhelmingly Powerful");
@@ -59,27 +72,33 @@ public class Battle {
             System.out.println("\n=== YOUR TURN ===");
             System.out.println("1. Attack with all your might!");
             System.out.print("Choice: ");
-            scanner.nextInt();
-            scanner.nextLine();
             
-            int damage = player.getSkillDamage(1);
-            System.out.println("You strike Zeus for " + damage + " damage!");
-            System.out.println("But it barely scratches the King of Gods...");
-            
-            System.out.println("\n=== ZEUS'S TURN ===");
-            int zeusDamage = 150 + (int)(Math.random() * 100);
-            player.takeDamage(zeusDamage);
-            System.out.println("Zeus unleashes divine lightning!");
-            System.out.println("You take " + zeusDamage + " damage!");
-            
-            roundNumber++;
-            System.out.println("\nPress Enter to continue...");
-            scanner.nextLine();
+            try {
+                inputHandler.getIntInput(1, 1);
+                
+                int damage = player.getSkillDamage(1);
+                System.out.println("You strike Zeus for " + damage + " damage!");
+                System.out.println("But it barely scratches the King of Gods...");
+                
+                System.out.println("\n=== ZEUS'S TURN ===");
+                int zeusDamage = 150 + (int)(Math.random() * 100);
+                player.takeDamage(zeusDamage);
+                System.out.println("Zeus unleashes divine lightning!");
+                System.out.println("You take " + zeusDamage + " damage!");
+                
+                roundNumber++;
+                System.out.println("\n" + "=".repeat(60));
+                System.out.println("\nPress Enter to continue...");
+                inputHandler.waitForEnter();
+            } catch (Exception e) {
+                System.out.println("An error occurred during battle.");
+            }
         }
         return false;
     }
     
     public void showBattleStatus() {
+        System.out.println("\n" + "=".repeat(60));
         System.out.println("\n=== Round " + roundNumber + " ===");
         System.out.println("--- BATTLE STATUS ---");
         System.out.println(player.getName() + ": " + player.getCurrentHP() + "/" + player.getMaxHP() + " HP, " +
@@ -88,66 +107,66 @@ public class Battle {
     }
     
     public boolean playerTurn() {
-        System.out.println("\n=== YOUR TURN ===");
-        player.displaySkills();
-        System.out.println("4. Use Potion");
-        System.out.println("5. Try to Run");
-        System.out.print("Your choice: ");
-        
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-        
-        if (choice >= 1 && choice <= 3) {
-            int result = player.useSkill(choice);
+        try {
+            System.out.println("\n=== YOUR TURN ===");
+            player.displaySkills();
+            System.out.println("4. Use Potion");
+            System.out.println("5. Try to Run");
+            System.out.print("Your choice: ");
             
-            if (result == -1) {
-                System.out.println("That skill is on cooldown!");
-                return playerTurn();
-            } else if (result == -2) {
-                System.out.println("Not enough MP!");
-                return playerTurn();
-            } else if (result == 0) {
-                return true;
-            } else {
-                enemy.takeDamage(result);
-                System.out.println(enemy.getName() + " takes " + result + " damage!");
-            }
-        } else if (choice == 4) {
-            if (player.getInventory().isEmpty()) {
-                System.out.println("You have no potions!");
-                return playerTurn();
-            }
+            int choice = inputHandler.getIntInput(1, 5);
             
-            System.out.println("\n=== SELECT POTION ===");
-            for (int i = 0; i < player.getInventory().size(); i++) {
-                Potion p = player.getInventory().get(i);
-                System.out.println((i + 1) + ". " + p.getName() + " x" + p.getQuantity() + 
-                                 " (" + p.getDescription() + ")");
-            }
-            System.out.print("Choose potion (0 to cancel): ");
-            
-            int potionChoice = scanner.nextInt();
-            scanner.nextLine();
-            
-            if (potionChoice == 0) {
-                return playerTurn();
-            } else if (potionChoice > 0 && potionChoice <= player.getInventory().size()) {
-                Potion potion = player.getInventory().get(potionChoice - 1);
-                potion.use(player);
+            if (choice >= 1 && choice <= 3) {
+                int result = player.useSkill(choice);
                 
-                if (potion.getQuantity() <= 0) {
-                    player.getInventory().remove(potionChoice - 1);
+                if (result == -1) {
+                    System.out.println("That skill is on cooldown!");
+                    return playerTurn();
+                } else if (result == -2) {
+                    System.out.println("Not enough MP!");
+                    return playerTurn();
+                } else if (result == 0) {
+                    return true;
+                } else {
+                    enemy.takeDamage(result);
+                    System.out.println(enemy.getName() + " takes " + result + " damage!");
                 }
-            } else {
-                System.out.println("Invalid choice!");
+            } else if (choice == 4) {
+                if (player.getInventory().isEmpty()) {
+                    System.out.println("You have no potions!");
+                    return playerTurn();
+                }
+                
+                System.out.println("\n=== SELECT POTION ===");
+                for (int i = 0; i < player.getInventory().size(); i++) {
+                    Potion p = (Potion) player.getInventory().get(i);
+                    System.out.println((i + 1) + ". " + p.getName() + " x" + p.getQuantity() + 
+                                     " (" + p.getDescription() + ")");
+                }
+                System.out.print("Choose potion (0 to cancel): ");
+                
+                int potionChoice = inputHandler.getIntInput(0, player.getInventory().size());
+                
+                if (potionChoice == 0) {
+                    return playerTurn();
+                } else {
+                    Potion potion = (Potion) player.getInventory().get(potionChoice - 1);
+                    potion.use(player);
+                    
+                    if (potion.getQuantity() <= 0) {
+                        player.getInventory().remove(potionChoice - 1);
+                    }
+                }
+            } else if (choice == 5) {
+                System.out.println("You cannot run from this battle!");
                 return playerTurn();
             }
-        } else if (choice == 5) {
-            System.out.println("You cannot run from this battle!");
+            
+            return true;
+        } catch (Exception e) {
+            System.out.println("An error occurred. Please try again.");
             return playerTurn();
         }
-        
-        return true;
     }
     
     public void enemyTurn() {
@@ -159,12 +178,17 @@ public class Battle {
     }
     
     public void victory() {
+        System.out.println("\n" + "=".repeat(60));
         System.out.println("\n=== VICTORY! ===");
         System.out.println(enemy.getName() + " is defeated!");
     }
     
     public void defeat() {
+        System.out.println("\n" + "=".repeat(60));
         System.out.println("\nYou have been defeated...");
-        player.rest();
+        player.restoreFullHealth();
+        player.restoreFullMana();
+        enemy.resetToMaxHealth();
+        System.out.println("Your HP and MP have been restored.");
     }
 }

@@ -1,22 +1,18 @@
-public class Potion {
-    private String name;
-    private String description;
-    private int quantity;
+public class Potion extends Item {
     private int hpRestore;
     private int mpRestore;
     
     public Potion(String name, String description, int quantity, int hpRestore, int mpRestore) {
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
+        super(name, description, quantity);
         this.hpRestore = hpRestore;
         this.mpRestore = mpRestore;
     }
     
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public int getQuantity() { return quantity; }
+    public void addQuantity(int amount) {
+        this.quantity += amount;
+    }
     
+    @Override
     public void use(Player player) {
         if (quantity > 0) {
             player.heal(hpRestore);

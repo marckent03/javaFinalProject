@@ -1,9 +1,21 @@
 import java.util.Scanner;
 
 public class Shop {
+    private InputHandler inputHandler;
+    private String merchantName;
+    
+    public Shop(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
+        this.merchantName = "Merchant";
+    }
+    
+    public void setMerchantName(String name) {
+        this.merchantName = name;
+    }
+    
     public void openShop(Player player, Scanner scanner) {
         System.out.println("\n=== TRAVELING MERCHANT ===");
-        System.out.println("Merchant: 'Greetings, traveler! Care to see my wares?'");
+        System.out.println(merchantName + ": 'Greetings, traveler! Care to see my wares?'");
         System.out.println("Your Eclipsium: " + player.getEclipsium());
         
         boolean shopping = true;
@@ -15,33 +27,39 @@ public class Shop {
             System.out.println("4. Leave Shop");
             System.out.print("Your choice: ");
             
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-            
-            if (choice == 1) {
-                if (player.spendEclipsium(50)) {
-                    player.addPotion(new Potion("Health Potion", "Restores 200 HP", 1, 200, 0));
-                    System.out.println("Purchased Health Potion!");
-                } else {
-                    System.out.println("Not enough Eclipsium!");
+            try {
+                int choice = inputHandler.getIntInput(1, 4);
+                
+                if (choice == 1) {
+                    if (player.spendEclipsium(50)) {
+                        player.addPotion(new Potion("Health Potion", "Restores 200 HP", 1, 200, 0));
+                        System.out.println("Purchased Health Potion!");
+                        System.out.println("Remaining Eclipsium: " + player.getEclipsium());
+                    } else {
+                        System.out.println("Not enough Eclipsium!");
+                    }
+                } else if (choice == 2) {
+                    if (player.spendEclipsium(40)) {
+                        player.addPotion(new Potion("Mana Potion", "Restores 100 MP", 1, 0, 100));
+                        System.out.println("Purchased Mana Potion!");
+                        System.out.println("Remaining Eclipsium: " + player.getEclipsium());
+                    } else {
+                        System.out.println("Not enough Eclipsium!");
+                    }
+                } else if (choice == 3) {
+                    if (player.spendEclipsium(100)) {
+                        player.addPotion(new Potion("Full Restore", "Restores all HP and MP", 1, 9999, 9999));
+                        System.out.println("Purchased Full Restore!");
+                        System.out.println("Remaining Eclipsium: " + player.getEclipsium());
+                    } else {
+                        System.out.println("Not enough Eclipsium!");
+                    }
+                } else if (choice == 4) {
+                    System.out.println(merchantName + ": 'Safe travels, friend!'");
+                    shopping = false;
                 }
-            } else if (choice == 2) {
-                if (player.spendEclipsium(40)) {
-                    player.addPotion(new Potion("Mana Potion", "Restores 100 MP", 1, 0, 100));
-                    System.out.println("Purchased Mana Potion!");
-                } else {
-                    System.out.println("Not enough Eclipsium!");
-                }
-            } else if (choice == 3) {
-                if (player.spendEclipsium(100)) {
-                    player.addPotion(new Potion("Full Restore", "Restores all HP and MP", 1, 9999, 9999));
-                    System.out.println("Purchased Full Restore!");
-                } else {
-                    System.out.println("Not enough Eclipsium!");
-                }
-            } else if (choice == 4) {
-                System.out.println("Merchant: 'Safe travels, friend!'");
-                shopping = false;
+            } catch (Exception e) {
+                System.out.println("An error occurred. Please try again.");
             }
         }
     }

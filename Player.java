@@ -1,52 +1,30 @@
 import java.util.ArrayList;
 
-public class Player {
-    private String name;
-    private String zodiacType;
-    private int currentHP;
-    private int maxHP;
-    private int currentMP;
-    private int maxMP;
+public class Player extends Character {
     private int eclipsium;
-    private int skill2Cooldown;
-    private int skill3Cooldown;
     private ArrayList<Potion> inventory;
     
     public Player(String name, String zodiacType) {
-        this.name = name;
-        this.zodiacType = zodiacType;
+        super(name, zodiacType, getMaxHPForType(zodiacType), getMaxMPForType(zodiacType));
         this.eclipsium = 0;
-        this.skill2Cooldown = 0;
-        this.skill3Cooldown = 0;
         this.inventory = new ArrayList<>();
-        
-        if (zodiacType.equals("Aries")) {
-            this.maxHP = 450;
-            this.maxMP = 150;
-        } else if (zodiacType.equals("Cancer")) {
-            this.maxHP = 500;
-            this.maxMP = 200;
-        } else {
-            this.maxHP = 400;
-            this.maxMP = 180;
-        }
-        
-        this.currentHP = maxHP;
-        this.currentMP = maxMP;
     }
     
-    public String getName() { return name; }
-    public String getZodiacType() { return zodiacType; }
-    public int getCurrentHP() { return currentHP; }
-    public int getMaxHP() { return maxHP; }
-    public int getCurrentMP() { return currentMP; }
-    public int getMaxMP() { return maxMP; }
+    private static int getMaxHPForType(String zodiacType) {
+        if (zodiacType.equals("Aries")) return 450;
+        else if (zodiacType.equals("Cancer")) return 500;
+        else return 400;
+    }
+    
+    private static int getMaxMPForType(String zodiacType) {
+        if (zodiacType.equals("Aries")) return 150;
+        else if (zodiacType.equals("Cancer")) return 200;
+        else return 180;
+    }
+    
+    public String getZodiacType() { return type; }
     public int getEclipsium() { return eclipsium; }
     public ArrayList<Potion> getInventory() { return inventory; }
-    
-    public boolean isAlive() {
-        return currentHP > 0;
-    }
     
     public void addEclipsium(int amount) {
         eclipsium += amount;
@@ -61,6 +39,12 @@ public class Player {
     }
     
     public void addPotion(Potion potion) {
+        for (Potion p : inventory) {
+            if (p.getName().equals(potion.getName())) {
+                p.addQuantity(potion.getQuantity());
+                return;
+            }
+        }
         inventory.add(potion);
     }
     
@@ -70,13 +54,6 @@ public class Player {
 
     public void restoreFullMana() {
         this.currentMP = this.maxMP;
-    }
-
-    public void takeDamage(int damage) {
-        currentHP = currentHP - damage;
-        if (currentHP < 0) {
-            currentHP = 0;
-        }
     }
     
     public void heal(int amount) {
@@ -92,17 +69,18 @@ public class Player {
         currentMP = Math.min(currentMP + (maxMP / 2), maxMP);
     }
     
-    public void reduceCooldowns() {
-        if (skill2Cooldown > 0) skill2Cooldown--;
-        if (skill3Cooldown > 0) skill3Cooldown--;
+    public void resetCooldowns() {
+        skill2Cooldown = 0;
+        skill3Cooldown = 0;
     }
     
+    @Override
     public String getSkillName(int skillNum) {
-        if (zodiacType.equals("Aries")) {
+        if (type.equals("Aries")) {
             if (skillNum == 1) return "Raging Charge";
             if (skillNum == 2) return "Blazing Strike";
             return "Infernal Cataclysm";
-        } else if (zodiacType.equals("Cancer")) {
+        } else if (type.equals("Cancer")) {
             if (skillNum == 1) return "Tidal Wave";
             if (skillNum == 2) return "Moonlit Barrier";
             return "Eclipse Embrace";
@@ -113,12 +91,13 @@ public class Player {
         }
     }
     
+    @Override
     public int getSkillDamage(int skillNum) {
-        if (zodiacType.equals("Aries")) {
+        if (type.equals("Aries")) {
             if (skillNum == 1) return 80;
             if (skillNum == 2) return 120;
             return 200;
-        } else if (zodiacType.equals("Cancer")) {
+        } else if (type.equals("Cancer")) {
             if (skillNum == 1) return 70;
             if (skillNum == 2) return 0;
             return 180;
@@ -180,7 +159,7 @@ public class Player {
         
         System.out.println("You use " + getSkillName(skillNum) + "!");
         
-        if (zodiacType.equals("Cancer") && skillNum == 2) {
+        if (type.equals("Cancer") && skillNum == 2) {
             int healAmount = 150;
             heal(healAmount);
             System.out.println("You heal for " + healAmount + " HP!");
@@ -190,9 +169,19 @@ public class Player {
         return getSkillDamage(skillNum);
     }
     
+    @Override
+    public int attack() {
+        return useSkill(1);
+    }
+    
+    @Override
+    public String getAttackMessage() {
+        return name + " attacks with " + getSkillName(1) + "!";
+    }
+    
     public void showStats() {
         System.out.println("\n=== " + name.toUpperCase() + " STATS ===");
-        System.out.println("Zodiac Type: " + zodiacType);
+        System.out.println("Zodiac Type: " + type);
         System.out.println("HP: " + currentHP + "/" + maxHP);
         System.out.println("MP: " + currentMP + "/" + maxMP);
         System.out.println("Eclipsium: " + eclipsium);
