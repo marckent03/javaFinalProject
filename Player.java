@@ -123,8 +123,8 @@ public class Player extends Character {
             if (skillNum == 2) return "Moonlit Barrier";
             return "Eclipse Embrace";
         } else {
-            if (skillNum == 1) return "Rain of Stars";
-            if (skillNum == 2) return "Piercing Arrow";
+            if (skillNum == 1) return "Piercing Arrow";
+            if (skillNum == 2) return "Rain of Stars";
             return "Celestial Execution";
         }
     }
@@ -139,8 +139,8 @@ public class Player extends Character {
             if (skillNum == 2) return "Heals and shields with lunar power";
             return "Devastating eclipse energy strike";
         } else {
-            if (skillNum == 1) return "Rain of celestial projectiles";
-            if (skillNum == 2) return "Multiple precise starlight arrows (2-3 hits)";
+            if (skillNum == 1) return "Multiple precise starlight arrows (2-3 hits)";
+            if (skillNum == 2) return "Rain of celestial projectiles";
             return "Ultimate hunting technique, never misses";
         }
     }
@@ -155,8 +155,8 @@ public class Player extends Character {
             if (skillNum == 2) return "Rest under my light.";
             return "May your soul drift beneath my tide.";
         } else {
-            if (skillNum == 1) return "Fall like stars, burn like judgment.";
-            if (skillNum == 2) return "The stars guide my aim.";
+            if (skillNum == 1) return "The stars guide my aim.";
+            if (skillNum == 2) return "Fall like stars, burn like judgment.";
             return "No mercy from the stars.";
         }
     }
@@ -173,8 +173,8 @@ public class Player extends Character {
             else if (skillNum == 2) baseDamage = 0;
             else baseDamage = 180;
         } else {
-            if (skillNum == 1) baseDamage = 60;
-            else if (skillNum == 2) baseDamage = 90;
+            if (skillNum == 1) baseDamage = 90;
+            else if (skillNum == 2) baseDamage = 60;
             else baseDamage = 220;
         }
         return (int)(baseDamage * damageMultiplier);
@@ -241,7 +241,7 @@ public class Player extends Character {
         
         int baseDamage = getSkillDamage(skillNum);
         
-        if (type.equals("Sagittarius") && skillNum == 2) {
+        if (type.equals("Sagittarius") && skillNum == 1) {
             int hits = 2 + (int)(Math.random() * 2);
             int totalDamage = 0;
             System.out.println("Multiple arrows strike!");
@@ -338,10 +338,10 @@ public class Player extends Character {
             System.out.println("High Damage, Precision Strikes");
             System.out.println("Master hunter with starlight arrows");
             System.out.println("\nSkills:");
-            System.out.println("1. Rain of Stars (DMG: 60, MP: 0)");
-            System.out.println("   - Rain of celestial projectiles");
-            System.out.println("2. Piercing Arrow (DMG: 90, MP: 30)");
+            System.out.println("1. Piercing Arrow (DMG: 90, MP: 0)");
             System.out.println("   - Multiple precise starlight arrows (2-3 hits)");
+            System.out.println("2. Rain of Stars (DMG: 60, MP: 30)");
+            System.out.println("   - Rain of celestial projectiles");
             System.out.println("3. Celestial Execution (DMG: 220, MP: 50)");
             System.out.println("   - Ultimate hunting technique, never misses");
         }
