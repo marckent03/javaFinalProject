@@ -11,6 +11,7 @@ public class ZodiacRpg {
     private int currentMinionIndex;
     private boolean inWorldExploration;
     private int restPenaltyCount;
+    private boolean zeusPhase1Completed;
     
     public ZodiacRpg() {
         scanner = new Scanner(System.in);
@@ -22,6 +23,7 @@ public class ZodiacRpg {
         currentMinionIndex = 0;
         inWorldExploration = false;
         restPenaltyCount = 0;
+        zeusPhase1Completed = false;
     }
     
     public void startGame() {
@@ -306,7 +308,6 @@ public class ZodiacRpg {
                             }
                             exploreWorld(boss.getType());
                         } else {
-                            worldCounter++;
                             handleZeusFinalBattle();
                         }
                     } else {
@@ -355,58 +356,102 @@ public class ZodiacRpg {
     
     public void handleZeusFinalBattle() {
         try {
-            System.out.println("\n" + "=".repeat(60));
-            System.out.println("\n=== WORLD " + worldCounter + "/3 ===");
-            System.out.println("\n=== ENTERING THE REALM OF ZEUS ===");
-            System.out.println();
-            System.out.println("Narrator:");
-            System.out.println("When the final demigod is freed and the last chain shatters,");
-            System.out.println("the Gateway reacts. The skies tremble. The realms align.");
-            System.out.println();
-            System.out.println("A colossal rift opens—swirling with gold lightning and divine stormfire.");
-            System.out.println("This is the World of Olympus. The Domain of Zeus.");
-            System.out.println("The Seat of the Immortal Tyrant.");
-            System.out.println();
-            System.out.println("Kyle stands firm despite his fear:");
-            System.out.println("Kyle: \"This... this is it. The World of Zeus.");
-            System.out.println("I can go no further—but I'll wait for you.");
-            System.out.println("Come back alive. All of us will.\"");
-            System.out.println();
-            System.out.println("Press Enter to continue...");
-            inputHandler.waitForEnter();
-            
-            System.out.println("\n" + "=".repeat(60));
-            shop.setMerchantName("Kent");
-            shop.openShop(player, scanner);
-            
-            player.resetCooldowns();
-            
-            System.out.println("\n" + "=".repeat(60));
-            System.out.println("\nAs you step inside, the world shifts from endless clouds");
-            System.out.println("to a silent marble city—a place where gods once walked,");
-            System.out.println("now abandoned, hollow, and filled only with echoes.");
-            System.out.println();
-            System.out.println("At its center stands a lone figure. A man.");
-            System.out.println("Human-shaped... but too still. Too perfect.");
-            System.out.println("Lightning flickers beneath his skin.");
-            System.out.println();
-            System.out.println("His back is turned. But you can feel him smiling.");
-            System.out.println();
-            System.out.println("Press Enter to face Zeus...");
-            inputHandler.waitForEnter();
-            
-            System.out.println("\n" + "=".repeat(60));
-            showZeusConfrontation();
-            
-            Enemy boss = enemies.get(0);
-            Battle battle = new Battle(player, boss, scanner, shop, inputHandler, false);
-            boolean victory = battle.startBattle();
-            
-            if (victory) {
+            if (!zeusPhase1Completed) {
+                worldCounter++;
+                System.out.println("\n" + "=".repeat(60));
+                System.out.println("\n=== WORLD " + worldCounter + "/3 ===");
+                System.out.println("\n=== ENTERING THE REALM OF ZEUS ===");
+                System.out.println();
+                System.out.println("Narrator:");
+                System.out.println("When the final demigod is freed and the last chain shatters,");
+                System.out.println("the Gateway reacts. The skies tremble. The realms align.");
+                System.out.println();
+                System.out.println("A colossal rift opens—swirling with gold lightning and divine stormfire.");
+                System.out.println("This is the World of Olympus. The Domain of Zeus.");
+                System.out.println("The Seat of the Immortal Tyrant.");
+                System.out.println();
+                System.out.println("Kyle stands firm despite his fear:");
+                System.out.println("Kyle: \"This... this is it. The World of Zeus.");
+                System.out.println("I can go no further—but I'll wait for you.");
+                System.out.println("Come back alive. All of us will.\"");
+                System.out.println();
+                System.out.println("Press Enter to continue...");
+                inputHandler.waitForEnter();
+                
+                System.out.println("\n" + "=".repeat(60));
+                shop.setMerchantName("Kent");
+                shop.openShop(player, scanner);
+                
+                player.resetCooldowns();
+                
+                System.out.println("\n" + "=".repeat(60));
+                System.out.println("\nAs you step inside, the world shifts from endless clouds");
+                System.out.println("to a silent marble city—a place where gods once walked,");
+                System.out.println("now abandoned, hollow, and filled only with echoes.");
+                System.out.println();
+                System.out.println("At its center stands a lone figure. A man.");
+                System.out.println("Human-shaped... but too still. Too perfect.");
+                System.out.println("Lightning flickers beneath his skin.");
+                System.out.println();
+                System.out.println("His back is turned. But you can feel him smiling.");
+                System.out.println();
+                System.out.println("Press Enter to face Zeus...");
+                inputHandler.waitForEnter();
+                
+                System.out.println("\n" + "=".repeat(60));
+                showZeusConfrontation();
+                
+                Enemy boss = enemies.get(0);
+                Battle battle = new Battle(player, boss, scanner, shop, inputHandler, false);
+                boolean victory = battle.startBattle();
+                
+                if (victory) {
+                    zeusPhase1Completed = true;
+                    enemies.remove(0);
+                    
+                    System.out.println("\n" + "=".repeat(60));
+                    System.out.println("\n=== PHASE 2: GOD FORM ===");
+                    System.out.println();
+                    System.out.println("! Narrator:");
+                    System.out.println("When his human body collapses, lightning engulfs him.");
+                    System.out.println("The sky tears open. Winds scream across Olympus.");
+                    System.out.println();
+                    System.out.println("He rises—no longer a man, but a colossal figure of storm and gold:");
+                    System.out.println("- Skin crackling with electricity");
+                    System.out.println("- Eyes brighter than suns");
+                    System.out.println("- Hair flowing like a solar flare");
+                    System.out.println("- Armor forged from thunder itself");
+                    System.out.println("- Wings of pure lightning unfurl behind him");
+                    System.out.println();
+                    System.out.println("Zeus (God Form): \"You wanted a god... Now face one.\"");
+                    System.out.println();
+                    System.out.println("Press Enter to continue...");
+                    inputHandler.waitForEnter();
+                    
+                    System.out.println("\n" + "=".repeat(60));
+                    Enemy zeusPhase2 = new Enemy("Zeus (God Form)", "God_Phase2", 1800, 600);
+                    Battle finalBattle = new Battle(player, zeusPhase2, scanner, shop, inputHandler, false);
+                    boolean finalVictory = finalBattle.startBattle();
+                    
+                    if (finalVictory) {
+                        System.out.println("\nPress Enter to continue...");
+                        inputHandler.waitForEnter();
+                        showVictoryEnding();
+                        enemies.clear();
+                        gameRunning = false;
+                    } else {
+                        zeusPhase1Completed = false;
+                        worldCounter--;
+                        enemies.add(0, new Enemy("Zeus (Human Form)", "God_Phase1", 1200, 400));
+                    }
+                } else {
+                    worldCounter--;
+                }
+            } else {
                 System.out.println("\n" + "=".repeat(60));
                 System.out.println("\n=== PHASE 2: GOD FORM ===");
                 System.out.println();
-                System.out.println("⚔️ Narrator:");
+                System.out.println("! Narrator:");
                 System.out.println("When his human body collapses, lightning engulfs him.");
                 System.out.println("The sky tears open. Winds scream across Olympus.");
                 System.out.println();
@@ -428,9 +473,15 @@ public class ZodiacRpg {
                 boolean finalVictory = finalBattle.startBattle();
                 
                 if (finalVictory) {
+                    System.out.println("\nPress Enter to continue...");
+                    inputHandler.waitForEnter();
                     showVictoryEnding();
                     enemies.clear();
                     gameRunning = false;
+                } else {
+                    zeusPhase1Completed = false;
+                    worldCounter--;
+                    enemies.add(0, new Enemy("Zeus (Human Form)", "God_Phase1", 1200, 400));
                 }
             }
         } catch (Exception e) {
@@ -485,7 +536,7 @@ public class ZodiacRpg {
     
     private void showVictoryEnding() {
         System.out.println("\n" + "=".repeat(60));
-        System.out.println("\n⚡ FINAL BATTLE ENDING ⚡");
+        System.out.println("\n! FINAL BATTLE ENDING !");
         System.out.println();
         System.out.println("Narrator:");
         System.out.println("When Zeus falls, the storm collapses.");
@@ -519,7 +570,9 @@ public class ZodiacRpg {
         System.out.println("All three demigods rise again—united at last!");
         System.out.println();
         System.out.println("Your legend will be remembered forever!");
-        System.out.println("\nWorlds Conquered: " + worldCounter + "/3");
+        System.out.println();
+        System.out.println("Press Enter to exit...");
+        inputHandler.waitForEnter();
     }
     
     public void exploreWorld(String bossType) {

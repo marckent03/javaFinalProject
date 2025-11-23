@@ -129,7 +129,12 @@ public class Battle {
                     return true;
                 } else {
                     enemy.takeDamage(result);
-                    System.out.println(enemy.getName() + " takes " + result + " damage!");
+                    
+                    if (player.getZodiacType().equals("Sagittarius") && choice == 1) {
+                        System.out.println(enemy.getName() + " takes " + result + " damage!");
+                    } else {
+                        System.out.println(enemy.getName() + " takes " + result + " damage!");
+                    }
                 }
             } else if (choice == 4) {
                 if (player.getInventory().isEmpty()) {

@@ -15,15 +15,39 @@ public class Shop {
     
     public void openShop(Player player, Scanner scanner) {
         System.out.println("\n=== TRAVELING MERCHANT ===");
-        System.out.println(merchantName + ": 'Greetings, traveler! Care to see my wares?'");
+        
+        if (merchantName.equals("Neo")) {
+            System.out.println("Neo: 'Before you step into this realm, child of the Zodiac...");
+            System.out.println("You may find something useful in my humble wares.'");
+        } else if (merchantName.equals("Francis")) {
+            System.out.println("Francis: 'Ah, child of the Zodiac... this realm carries the weight of tides and secrets.");
+            System.out.println("Before you step forward, perhaps my wares can offer you the protection the stars forgot to give.'");
+        } else if (merchantName.equals("Kevin")) {
+            System.out.println("Kevin: 'Hoho! A bold traveler guided by the Zodiac's flame.");
+            System.out.println("Before charging into the unknown, take a look—my goods might just make your next step a wiser one.'");
+        } else if (merchantName.equals("Kent")) {
+            System.out.println("Kent: 'You stand at the threshold of Olympus's wrath, child.");
+            System.out.println("If you're determined to face a god, glance at my wares. Even the bravest hero needs an edge against Zeus.'");
+        } else {
+            System.out.println(merchantName + ": 'Greetings, traveler! Care to see my wares?'");
+        }
+        
         System.out.println("Your Eclipsium: " + player.getEclipsium());
         
         boolean shopping = true;
         while (shopping) {
             System.out.println("\n=== SHOP MENU ===");
-            System.out.println("1. Health Potion (50 Eclipsium) - Restores 200 HP");
-            System.out.println("2. Mana Potion (40 Eclipsium) - Restores 100 MP");
-            System.out.println("3. Full Restore (100 Eclipsium) - Restores all HP and MP");
+            
+            int healthPotionCount = player.getPotionCount("Health Potion");
+            int manaPotionCount = player.getPotionCount("Mana Potion");
+            int fullRestoreCount = player.getPotionCount("Full Restore");
+            
+            System.out.println("1. Health Potion (50 Eclipsium) - Restores 200 HP" + 
+                             (healthPotionCount > 0 ? " [Owned: " + healthPotionCount + "]" : ""));
+            System.out.println("2. Mana Potion (40 Eclipsium) - Restores 100 MP" + 
+                             (manaPotionCount > 0 ? " [Owned: " + manaPotionCount + "]" : ""));
+            System.out.println("3. Full Restore (100 Eclipsium) - Restores all HP and MP" + 
+                             (fullRestoreCount > 0 ? " [Owned: " + fullRestoreCount + "]" : ""));
             System.out.println("4. Leave Shop");
             System.out.print("Your choice: ");
             
