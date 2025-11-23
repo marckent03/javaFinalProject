@@ -139,8 +139,8 @@ public class Player extends Character {
             if (skillNum == 2) return "Heals and shields with lunar power";
             return "Devastating eclipse energy strike";
         } else {
-            if (skillNum == 1) return "Multiple precise starlight arrows (2-3 hits)";
-            if (skillNum == 2) return "Rain of celestial projectiles";
+            if (skillNum == 1) return "Precise starlight arrow";
+            if (skillNum == 2) return "Rain of celestial projectiles (2-3 hits)";
             return "Ultimate hunting technique, never misses";
         }
     }
@@ -173,8 +173,8 @@ public class Player extends Character {
             else if (skillNum == 2) baseDamage = 0;
             else baseDamage = 180;
         } else {
-            if (skillNum == 1) baseDamage = 90;
-            else if (skillNum == 2) baseDamage = 60;
+            if (skillNum == 1) baseDamage = 60;
+            else if (skillNum == 2) baseDamage = 90;
             else baseDamage = 220;
         }
         return (int)(baseDamage * damageMultiplier);
@@ -241,10 +241,11 @@ public class Player extends Character {
         
         int baseDamage = getSkillDamage(skillNum);
         
-        if (type.equals("Sagittarius") && skillNum == 1) {
+        // Rain of Stars (skill 2) is the multi-hit ability
+        if (type.equals("Sagittarius") && skillNum == 2) {
             int hits = 2 + (int)(Math.random() * 2);
             int totalDamage = 0;
-            System.out.println("Multiple arrows strike!");
+            System.out.println("Multiple stars rain down!");
             for (int i = 0; i < hits; i++) {
                 int hitDamage = calculateDamageWithVariation(baseDamage / hits);
                 totalDamage += hitDamage;
@@ -338,10 +339,10 @@ public class Player extends Character {
             System.out.println("High Damage, Precision Strikes");
             System.out.println("Master hunter with starlight arrows");
             System.out.println("\nSkills:");
-            System.out.println("1. Piercing Arrow (DMG: 90, MP: 0)");
-            System.out.println("   - Multiple precise starlight arrows (2-3 hits)");
-            System.out.println("2. Rain of Stars (DMG: 60, MP: 30)");
-            System.out.println("   - Rain of celestial projectiles");
+            System.out.println("1. Piercing Arrow (DMG: 60, MP: 0)");
+            System.out.println("   - Precise starlight arrow");
+            System.out.println("2. Rain of Stars (DMG: 90, MP: 30)");
+            System.out.println("   - Rain of celestial projectiles (2-3 hits)");
             System.out.println("3. Celestial Execution (DMG: 220, MP: 50)");
             System.out.println("   - Ultimate hunting technique, never misses");
         }
